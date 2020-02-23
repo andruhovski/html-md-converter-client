@@ -1,0 +1,46 @@
+{
+    "name": "html-md-converter",
+    "displayName": "HTML to MD converter",
+    "description": "Convert HTML to Markdown",
+    "publisher": "andruhovski",
+    "author": {
+        "name": "Andriy Andruhovski"
+    },
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.42.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:extension.convertHTMLtoMarkdown"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [{
+            "command": "extension.convertHTMLtoMarkdown",
+            "title": "Convert HTML to MD"
+        }]
+    },
+    "scripts": {
+        "test": "node ./test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^12.11.7",
+        "@types/vscode": "^1.42.0",
+        "eslint": "^6.6.0",
+        "glob": "^7.1.5",
+        "mocha": "^6.2.2",
+        "typescript": "^3.6.4",
+        "vscode-test": "^1.2.2"
+    },
+    "dependencies": {
+        "fs": "0.0.1-security",
+        "node-fetch": "^2.6.0",
+        "path": "^0.12.7",
+        "uuid": "^3.4.0"
+    }
+}
