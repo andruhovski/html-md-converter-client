@@ -1,46 +1,174 @@
 {
-    "name": "html-md-converter",
-    "displayName": "HTML to MD converter",
-    "description": "Convert HTML to Markdown",
-    "publisher": "andruhovski",
-    "author": {
-        "name": "Andriy Andruhovski"
-    },
-    "version": "0.0.1",
-    "engines": {
-        "vscode": "^1.42.0"
-    },
-    "categories": [
-        "Other"
+  "name": "html-md-converter",
+  "displayName": "HTML & MD Online Converter",
+  "description": "Convert HTML to Markdown",
+  "publisher": "andruhovski",
+  "version": "0.0.2",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "hmoc.convertHTMLtoMarkdown",
+        "title": "A2: Convert HTML to MD"
+      },
+      {
+        "command": "hmoc.convertHTMLtoPDF",
+        "title": "A2: Convert HTML to PDF"
+      },
+      {
+        "command": "hmoc.convertHTMLtoDOCX",
+        "title": "A2: Convert HTML to DOCX"
+      }
     ],
-    "activationEvents": [
-        "onCommand:extension.convertHTMLtoMarkdown"
-    ],
-    "main": "./extension.js",
-    "contributes": {
-        "commands": [{
-            "command": "extension.convertHTMLtoMarkdown",
-            "title": "Convert HTML to MD"
-        }]
+    "menus": {
+      "commandPalette": [
+        {
+          "when": "resourceLangId == html",
+          "command": "hmoc.convertHTMLtoMarkdown"
+        },
+        {
+          "when": "resourceLangId == html",
+          "command": "hmoc.convertHTMLtoPDF"
+        },
+        {
+          "when": "resourceLangId == html",
+          "command": "hmoc.convertHTMLtoDOCX"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceLangId == html",
+          "command": "hmoc.convertHTMLtoMarkdown",
+          "group": "hmoc@1"
+        },
+        {
+          "when": "resourceLangId == html",
+          "command": "hmoc.convertHTMLtoPDF",
+          "group": "hmoc@1"
+        },
+        {
+          "when": "resourceLangId == html",
+          "command": "hmoc.convertHTMLtoDOCX",
+          "group": "hmoc@1"
+        }
+      ]
     },
-    "scripts": {
-        "test": "node ./test/runTest.js"
-    },
-    "devDependencies": {
-        "@types/glob": "^7.1.1",
-        "@types/mocha": "^5.2.7",
-        "@types/node": "^12.11.7",
-        "@types/vscode": "^1.42.0",
-        "eslint": "^6.6.0",
-        "glob": "^7.1.5",
-        "mocha": "^6.2.2",
-        "typescript": "^3.6.4",
-        "vscode-test": "^1.2.2"
-    },
-    "dependencies": {
-        "fs": "0.0.1-security",
-        "node-fetch": "^2.6.0",
-        "path": "^0.12.7",
-        "uuid": "^3.4.0"
-    }
+    "configuration": [
+      {
+        "title": "Converter",
+        "properties": {
+          "hmoc.md.mode": {           
+            "type": "string",
+            "enum": [
+              "html-md-v1",
+              "html-md-v2"
+            ],
+            "default": "html-md-v1",
+            "description": "Version of HTML to Markdown converter."
+          },
+          "hmoc.docx.mode": {
+            "type": "string",
+            "enum": [
+              "html-docx-v2"
+            ],
+            "default": "html-docx-v2",
+            "description": "Version of HTML to DOCX converter."
+          },
+          "hmoc.pdf.mode": {
+            "type": "string",
+            "enum": [
+              "html-pdf-v2"
+            ],
+            "default": "html-pdf-v2",
+            "description": "Version of HTML to PDF converter."
+          },
+          "hmoc.outputDirectory": {
+            "type": "string",
+            "default": "./",
+            "description": "Place for output files"
+          },
+          "hmoc.paper.orientation": {
+            "type": "string",
+            "enum": [
+              "portrait",
+              "landscape"
+            ],
+            "default": "portrait",
+            "description": "Paper orientation for PDF files. Portrait or Landscape."
+          },
+          "hmoc.paper.size": {
+            "type": "string",
+            "enum": [
+              "A0",
+              "A1",
+              "A2",
+              "A3",
+              "A4",
+              "A5",
+              "A6",
+              "Letter",
+              "Legal",
+              "Custom"
+            ],
+            "default": "A4",
+            "description": "Paper Size [A0, A1, A2, A3, A4, A5, A6, Letter, Legal]. The value Custom means using options Width and Height instead Paper Size."
+          },
+          "hmoc.paper.width": {
+            "type": "string",
+            "default": "210mm",
+            "description": "Paper Width, accepts values labeled with units(mm, cm, in, px)."
+          },
+          "hmoc.paper.height": {
+            "type": "string",
+            "default": "297mm",
+            "description": "Paper Height, accepts values labeled with units(mm, cm, in, px)."
+          },
+          "hmoc.margin.top": {
+            "type": "string",
+            "default": "10mm",
+            "description": "Top margin (units: mm, cm, in, px)."
+          },
+          "hmoc.margin.bottom": {
+            "type": "string",
+            "default": "10mm",
+            "description": "Bottom margin (units: mm, cm, in, px)."
+          },
+          "hmoc.margin.right": {
+            "type": "string",
+            "default": "10mm",
+            "description": "Right margin (units: mm, cm, in, px)."
+          },
+          "hmoc.margin.left": {
+            "type": "string",
+            "default": "10mm",
+            "description": "Left margin (units: mm, cm, in, px)."
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "uuid": "^9.0.1"
+  }
 }

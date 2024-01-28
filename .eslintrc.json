@@ -1,15 +1,13 @@
 {
-	"globals": {
-		"fetch": false
-	},
 	"env": {
 		"browser": false,
 		"commonjs": true,
 		"es6": true,
-		"node": true
+		"node": true,
+		"mocha": true
 	},
 	"parserOptions": {
-		"ecmaVersion": 2017,
+		"ecmaVersion": 2018,
 		"ecmaFeatures": {
 			"jsx": true
 		},
