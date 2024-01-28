@@ -3,7 +3,7 @@
   "displayName": "HTML & MD Online Converter",
   "description": "Convert HTML to Markdown",
   "publisher": "andruhovski",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -68,7 +68,7 @@
       {
         "title": "Converter",
         "properties": {
-          "hmoc.md.mode": {           
+          "hmoc.md.mode": {
             "type": "string",
             "enum": [
               "html-md-v1",
