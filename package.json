@@ -95,7 +95,7 @@
           },
           "hmoc.outputDirectory": {
             "type": "string",
-            "default": "./",
+            "default": "<current>",
             "description": "Place for output files"
           },
           "hmoc.paper.orientation": {

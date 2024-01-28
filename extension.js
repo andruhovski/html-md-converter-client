@@ -4,7 +4,7 @@ const uuidv4 = require("uuid").v4;
 const Buffer = require("node:buffer").Buffer;
 const existsSync = require("node:fs").existsSync;
 const writeFile = require("node:fs/promises").writeFile;
-const apiURL = "https://tools.andruhovski.com/api/convert"
+const apiURL = "https://tools.andruhovski.com/api/convert";
 
 
 /**
@@ -71,7 +71,7 @@ async function convertHTMLtoFormat(conversionType) {
     githubFlavored: true,
     removeComments: true,
   };
-
+  
   try {
     const ext = path.extname(htmlFileName);
     const response = await vscode.window.withProgress(
@@ -90,8 +90,12 @@ async function convertHTMLtoFormat(conversionType) {
       }
     );
 
-    const outputDirectory =
-      vscode.workspace.getConfiguration("hmoc")["outputDirectory"] || ".";
+    let outputDirectory =
+      vscode.workspace.getConfiguration("hmoc")["outputDirectory"] ||
+      "<current>";
+    if (outputDirectory === "<current>") {
+      outputDirectory = path.dirname(editor.document.uri.fsPath);
+    }
     const outputFileName = htmlFileName.replace(ext, "." + conversionType);
     const outputFullPath = path.resolve(
       path.join(outputDirectory, path.basename(outputFileName))
