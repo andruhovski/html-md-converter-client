@@ -3,7 +3,7 @@
   "displayName": "HTML & MD Online Converter",
   "description": "Convert HTML to Markdown",
   "publisher": "andruhovski",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -30,7 +30,7 @@
         "command": "hmoc.convertHTMLtoDOCX",
         "title": "A2: Convert HTML to DOCX"
       },
-      {        
+      {
         "command": "hmoc.convertHTMLtoXLSX",
         "title": "A2: Convert HTML to XLSX"
       }
