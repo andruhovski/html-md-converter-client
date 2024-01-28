@@ -13,3 +13,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Added
 
 - HTML to MD converter
+
+## [0.0.2] - 2024-01-28
+
+### Added
+
+- HTML to DOCX converter
+- HTML to PDF converter
