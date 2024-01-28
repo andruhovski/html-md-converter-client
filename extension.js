@@ -17,6 +17,7 @@ function activate(context) {
     "hmoc.convertHTMLtoMarkdown": async () => await convertHTMLtoFormat("md"),
     "hmoc.convertHTMLtoPDF": async () => await convertHTMLtoFormat("pdf"),
     "hmoc.convertHTMLtoDOCX": async () => await convertHTMLtoFormat("docx"),
+    "hmoc.convertHTMLtoXLSX": async () => await convertHTMLtoFormat("xlsx"),
   };
 
   for (const [commandId, callback] of Object.entries(commands)) {

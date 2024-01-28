@@ -29,6 +29,10 @@
       {
         "command": "hmoc.convertHTMLtoDOCX",
         "title": "A2: Convert HTML to DOCX"
+      },
+      {        
+        "command": "hmoc.convertHTMLtoXLSX",
+        "title": "A2: Convert HTML to XLSX"
       }
     ],
     "menus": {
@@ -44,6 +48,10 @@
         {
           "when": "resourceLangId == html",
           "command": "hmoc.convertHTMLtoDOCX"
+        },
+        {
+          "when": "resourceLangId == html",
+          "command": "hmoc.convertHTMLtoXLSX"
         }
       ],
       "editor/context": [
@@ -60,6 +68,11 @@
         {
           "when": "resourceLangId == html",
           "command": "hmoc.convertHTMLtoDOCX",
+          "group": "hmoc@1"
+        },
+        {
+          "when": "resourceLangId == html",
+          "command": "hmoc.convertHTMLtoXLSX",
           "group": "hmoc@1"
         }
       ]
@@ -83,6 +96,14 @@
               "html-docx-v2"
             ],
             "default": "html-docx-v2",
+            "description": "Version of HTML to DOCX converter."
+          },
+          "hmoc.xlsx.mode": {
+            "type": "string",
+            "enum": [
+              "html-xlsx-v2"
+            ],
+            "default": "html-xlsx-v2",
             "description": "Version of HTML to DOCX converter."
           },
           "hmoc.pdf.mode": {
