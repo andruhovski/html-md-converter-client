@@ -71,8 +71,9 @@ async function convertHTMLtoFormat(conversionType) {
     mode: vscode.workspace.getConfiguration("hmoc")[conversionType]["mode"],
     githubFlavored: true,
     removeComments: true,
+    paper: vscode.workspace.getConfiguration('hmoc')['paper']
   };
-  
+
   try {
     const ext = path.extname(htmlFileName);
     const response = await vscode.window.withProgress(
@@ -110,7 +111,7 @@ async function convertHTMLtoFormat(conversionType) {
   }
 }
 
-function deactivate() {}
+function deactivate() { }
 
 module.exports = {
   activate,
