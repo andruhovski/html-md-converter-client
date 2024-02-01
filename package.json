@@ -155,22 +155,22 @@
             "default": "297mm",
             "description": "Paper Height, accepts values labeled with units(mm, cm, in, px)."
           },
-          "hmoc.margin.top": {
+          "hmoc.margins.top": {
             "type": "string",
             "default": "10mm",
             "description": "Top margin (units: mm, cm, in, px)."
           },
-          "hmoc.margin.bottom": {
+          "hmoc.margins.bottom": {
             "type": "string",
             "default": "10mm",
             "description": "Bottom margin (units: mm, cm, in, px)."
           },
-          "hmoc.margin.right": {
+          "hmoc.margins.right": {
             "type": "string",
             "default": "10mm",
             "description": "Right margin (units: mm, cm, in, px)."
           },
-          "hmoc.margin.left": {
+          "hmoc.margins.left": {
             "type": "string",
             "default": "10mm",
             "description": "Left margin (units: mm, cm, in, px)."
