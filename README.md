@@ -28,6 +28,8 @@ By default, all actions run in the current directory.
    * `A2: Convert HTML to PDF`
    * `A2: Convert HTML to DOCX`
 
+![Demonstration](./images/demo01.gif)
+
 ### Menu
 
 1. Open the Markdown file
@@ -65,3 +67,16 @@ Initial release of HMOC
 ### 0.0.2
 
 Updated to VS Code vesrion 1.85.0
+
+### 0.0.3 - 0.0.5
+
+* Minor fixes
+* Support for converting HTML to XLSX
+
+## [0.0.6] - 2024-02-01
+
+Added page settings
+
+## [0.0.7] - 2024-09-12
+
+README fix
