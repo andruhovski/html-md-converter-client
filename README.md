@@ -73,10 +73,10 @@ Updated to VS Code vesrion 1.85.0
 * Minor fixes
 * Support for converting HTML to XLSX
 
-## [0.0.6] - 2024-02-01
+### [0.0.6] - 2024-02-01
 
 Added page settings
 
-## [0.0.7] - 2024-09-12
+### [0.0.7] - 2024-09-12
 
 README fix
