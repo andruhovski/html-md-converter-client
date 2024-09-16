@@ -80,3 +80,7 @@ Added page settings
 ### [0.0.7] - 2024-09-12
 
 README fix
+
+### [0.0.8] - 2024-09-16
+
+Security fix
