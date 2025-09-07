@@ -74,7 +74,7 @@ async function convertHTMLtoFormat(conversionType) {
     paper: vscode.workspace.getConfiguration('hmoc')['paper'],
     margins: vscode.workspace.getConfiguration('hmoc')['margins']
   };
- 
+
   try {
     const ext = path.extname(htmlFileName);
     const response = await vscode.window.withProgress(
@@ -93,19 +93,25 @@ async function convertHTMLtoFormat(conversionType) {
       }
     );
 
-    let outputDirectory =
-      vscode.workspace.getConfiguration("hmoc")["outputDirectory"] ||
-      "<current>";
-    if (outputDirectory === "<current>") {
-      outputDirectory = path.dirname(editor.document.uri.fsPath);
+    if (response.ok) {
+      let outputDirectory =
+        vscode.workspace.getConfiguration("hmoc")["outputDirectory"] ||
+        "<current>";
+      if (outputDirectory === "<current>") {
+        outputDirectory = path.dirname(editor.document.uri.fsPath);
+      }
+      const outputFileName = htmlFileName.replace(ext, "." + conversionType);
+      const outputFullPath = path.resolve(
+        path.join(outputDirectory, path.basename(outputFileName))
+      );
+      const buffer = await response.arrayBuffer();
+      await writeFile(outputFullPath, Buffer.from(buffer));
+      vscode.window.showInformationMessage("File saved: " + outputFullPath);
     }
-    const outputFileName = htmlFileName.replace(ext, "." + conversionType);
-    const outputFullPath = path.resolve(
-      path.join(outputDirectory, path.basename(outputFileName))
-    );
-    const buffer = await response.arrayBuffer();
-    await writeFile(outputFullPath, Buffer.from(buffer));
-    vscode.window.showInformationMessage("File saved: " + outputFullPath);
+    else {
+      vscode.window.showErrorMessage(`Converter: ${response.statusText}`);
+      return;
+    }
   } catch (err) {
     vscode.window.showErrorMessage(`Converter: ${err.message}`);
     return;
