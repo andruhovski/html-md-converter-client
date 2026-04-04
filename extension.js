@@ -5,7 +5,9 @@ const Buffer = require("node:buffer").Buffer;
 const existsSync = require("node:fs").existsSync;
 const writeFile = require("node:fs/promises").writeFile;
 const apiURL = "https://tools.andruhovski.com/api/convert";
+const REQUEST_TIMEOUT_MS = 60000;
 
+let conversionInProgress = false;
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -45,7 +47,7 @@ function validateEditor(editor, languageId) {
   }
 
   if (!existsSync(editor.document.uri.fsPath)) {
-    return "File name does not get!";
+    return "File not found on disk!";
   }
 
   return "";
@@ -55,6 +57,11 @@ function validateEditor(editor, languageId) {
  * @param {string} conversionType
  */
 async function convertHTMLtoFormat(conversionType) {
+  if (conversionInProgress) {
+    vscode.window.showWarningMessage("A conversion is already in progress.");
+    return;
+  }
+
   const editor = vscode.window.activeTextEditor;
   const errorMessage = validateEditor(editor, "html");
 
@@ -63,42 +70,61 @@ async function convertHTMLtoFormat(conversionType) {
     return;
   }
 
-  let htmlFileName = editor.document.uri.fsPath;
+  const htmlFileName = editor.document.uri.fsPath;
+  const config = vscode.workspace.getConfiguration("hmoc");
 
   const data = {
     guid: uuidv4(),
     content: editor.document.getText(),
-    mode: vscode.workspace.getConfiguration("hmoc")[conversionType]["mode"],
+    mode: config.get(`${conversionType}.mode`),
     githubFlavored: true,
     removeComments: true,
-    paper: vscode.workspace.getConfiguration('hmoc')['paper'],
-    margins: vscode.workspace.getConfiguration('hmoc')['margins']
+    paper: {
+      size: config.get("paper.size"),
+      orientation: config.get("paper.orientation"),
+      width: config.get("paper.width"),
+      height: config.get("paper.height"),
+    },
+    margins: {
+      top: config.get("margins.top"),
+      bottom: config.get("margins.bottom"),
+      left: config.get("margins.left"),
+      right: config.get("margins.right"),
+    },
   };
 
+  conversionInProgress = true;
+  let timeoutId;
   try {
     const ext = path.extname(htmlFileName);
+    const abortController = new AbortController();
+    timeoutId = setTimeout(() => abortController.abort(), REQUEST_TIMEOUT_MS);
+
     const response = await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
         title: "HTML & MD Online Converter",
-        cancellable: false,
+        cancellable: true,
       },
-      async (progress) => {
+      async (progress, token) => {
+        token.onCancellationRequested(() => {
+          clearTimeout(timeoutId);
+          abortController.abort();
+        });
         progress.report({ message: "Conversion in progress..." });
         return fetch(apiURL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
+          signal: abortController.signal,
         });
       }
     );
 
     if (response.ok) {
-      let outputDirectory =
-        vscode.workspace.getConfiguration("hmoc")["outputDirectory"] ||
-        "<current>";
+      let outputDirectory = config.get("outputDirectory") || "<current>";
       if (outputDirectory === "<current>") {
-        outputDirectory = path.dirname(editor.document.uri.fsPath);
+        outputDirectory = path.dirname(htmlFileName);
       }
       const outputFileName = htmlFileName.replace(ext, "." + conversionType);
       const outputFullPath = path.resolve(
@@ -107,14 +133,23 @@ async function convertHTMLtoFormat(conversionType) {
       const buffer = await response.arrayBuffer();
       await writeFile(outputFullPath, Buffer.from(buffer));
       vscode.window.showInformationMessage("File saved: " + outputFullPath);
-    }
-    else {
-      vscode.window.showErrorMessage(`Converter: ${response.statusText}`);
-      return;
+    } else {
+      let errorDetail = response.statusText;
+      try {
+        const errorBody = await response.text();
+        if (errorBody) errorDetail = errorBody;
+      } catch (_) { /* ignore */ }
+      vscode.window.showErrorMessage(`Converter error (${response.status}): ${errorDetail}`);
     }
   } catch (err) {
-    vscode.window.showErrorMessage(`Converter: ${err.message}`);
-    return;
+    if (err.name === "AbortError") {
+      vscode.window.showWarningMessage("Conversion cancelled or timed out.");
+    } else {
+      vscode.window.showErrorMessage(`Converter: ${err.message}`);
+    }
+  } finally {
+    clearTimeout(timeoutId);
+    conversionInProgress = false;
   }
 }
 
