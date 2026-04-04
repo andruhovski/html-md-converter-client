@@ -1,15 +1,50 @@
 const assert = require('assert');
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 const vscode = require('vscode');
-// const myExtension = require('../extension');
+const { validateEditor, getApiUrl } = require('../extension');
 
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
+	suite('validateEditor', () => {
+		test('returns error when editor is undefined', () => {
+			const result = validateEditor(undefined, 'html');
+			assert.strictEqual(result, 'No active Editor!');
+		});
+
+		test('returns error when document language is not html', () => {
+			const mockEditor = {
+				document: {
+					languageId: 'markdown',
+					isUntitled: false,
+					uri: { fsPath: '/some/file.md' },
+				},
+			};
+			const result = validateEditor(mockEditor, 'html');
+			assert.strictEqual(result, 'It is not a html mode!');
+		});
+
+		test('returns error when document is untitled', () => {
+			const mockEditor = {
+				document: {
+					languageId: 'html',
+					isUntitled: true,
+					uri: { fsPath: '' },
+				},
+			};
+			const result = validateEditor(mockEditor, 'html');
+			assert.strictEqual(result, 'File not saved. Please, save before converting!');
+		});
+	});
+
+	suite('getApiUrl', () => {
+		test('returns URL ending with /convert', () => {
+			const url = getApiUrl();
+			assert.ok(url.endsWith('/convert'), `Expected URL to end with /convert, got: ${url}`);
+		});
+
+		test('uses development API base URL from workspace settings', () => {
+			const url = getApiUrl();
+			assert.strictEqual(url, 'https://localhost:7141/api/convert');
+		});
 	});
 });

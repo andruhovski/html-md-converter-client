@@ -178,6 +178,11 @@
             "type": "string",
             "default": "10mm",
             "description": "Left margin (units: mm, cm, in, px)."
+          },
+          "hmoc.apiBaseUrl": {
+            "type": "string",
+            "default": "https://tools.andruhovski.com/api/",
+            "description": "Base URL of the converter API. Change to a local URL for development (e.g. https://localhost:7141/api/)."
           }
         }
       }

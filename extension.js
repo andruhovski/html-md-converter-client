@@ -4,8 +4,18 @@ const uuidv4 = require("uuid").v4;
 const Buffer = require("node:buffer").Buffer;
 const existsSync = require("node:fs").existsSync;
 const writeFile = require("node:fs/promises").writeFile;
-const apiURL = "https://tools.andruhovski.com/api/convert";
+const PROD_API_BASE_URL = "https://tools.andruhovski.com/api/";
 const REQUEST_TIMEOUT_MS = 60000;
+
+/**
+ * Returns the full API endpoint URL, resolved from VS Code configuration.
+ * @returns {string}
+ */
+function getApiUrl() {
+  const config = vscode.workspace.getConfiguration("hmoc");
+  const baseUrl = config.get("apiBaseUrl") || PROD_API_BASE_URL;
+  return (baseUrl.endsWith("/") ? baseUrl : baseUrl + "/") + "convert";
+}
 
 let conversionInProgress = false;
 
@@ -112,7 +122,7 @@ async function convertHTMLtoFormat(conversionType) {
           abortController.abort();
         });
         progress.report({ message: "Conversion in progress..." });
-        return fetch(apiURL, {
+        return fetch(getApiUrl(), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
@@ -158,4 +168,6 @@ function deactivate() { }
 module.exports = {
   activate,
   deactivate,
+  validateEditor,
+  getApiUrl,
 };
