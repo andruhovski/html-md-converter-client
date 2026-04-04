@@ -108,7 +108,7 @@
               "html-xlsx-v2"
             ],
             "default": "html-xlsx-v2",
-            "description": "Version of HTML to DOCX converter."
+            "description": "Version of HTML to XLSX converter."
           },
           "hmoc.pdf.mode": {
             "type": "string",
@@ -181,8 +181,8 @@
           },
           "hmoc.apiBaseUrl": {
             "type": "string",
-            "default": "https://tools.andruhovski.com/api/",
-            "description": "Base URL of the converter API. Change to a local URL for development (e.g. https://localhost:7141/api/)."
+            "default": "https://tools.andruhovski.com/api/v1/",
+            "description": "Base URL of the converter API. Change to a local URL for development (e.g. https://localhost:7141/api/v1/)."
           }
         }
       }

@@ -4,7 +4,7 @@ const uuidv4 = require("uuid").v4;
 const Buffer = require("node:buffer").Buffer;
 const existsSync = require("node:fs").existsSync;
 const writeFile = require("node:fs/promises").writeFile;
-const PROD_API_BASE_URL = "https://tools.andruhovski.com/api/";
+const PROD_API_BASE_URL = "https://tools.andruhovski.com/api/v1/";
 const REQUEST_TIMEOUT_MS = 60000;
 
 /**
@@ -14,7 +14,7 @@ const REQUEST_TIMEOUT_MS = 60000;
 function getApiUrl() {
   const config = vscode.workspace.getConfiguration("hmoc");
   const baseUrl = config.get("apiBaseUrl") || PROD_API_BASE_URL;
-  return (baseUrl.endsWith("/") ? baseUrl : baseUrl + "/") + "convert";
+  return (baseUrl.endsWith("/") ? baseUrl : baseUrl + "/") + "convertions";
 }
 
 let conversionInProgress = false;
