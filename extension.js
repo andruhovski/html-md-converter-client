@@ -104,6 +104,7 @@ async function convertHTMLtoFormat(conversionType) {
   };
 
   conversionInProgress = true;
+  /** @type {NodeJS.Timeout | undefined} */
   let timeoutId;
   try {
     const ext = path.extname(htmlFileName);
