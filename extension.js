@@ -94,10 +94,11 @@ async function convertHTMLtoFormat(conversionType) {
   };
 
   conversionInProgress = true;
+  let timeoutId;
   try {
     const ext = path.extname(htmlFileName);
     const abortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), REQUEST_TIMEOUT_MS);
+    timeoutId = setTimeout(() => abortController.abort(), REQUEST_TIMEOUT_MS);
 
     const response = await vscode.window.withProgress(
       {
@@ -106,7 +107,10 @@ async function convertHTMLtoFormat(conversionType) {
         cancellable: true,
       },
       async (progress, token) => {
-        token.onCancellationRequested(() => abortController.abort());
+        token.onCancellationRequested(() => {
+          clearTimeout(timeoutId);
+          abortController.abort();
+        });
         progress.report({ message: "Conversion in progress..." });
         return fetch(apiURL, {
           method: "POST",
@@ -116,8 +120,6 @@ async function convertHTMLtoFormat(conversionType) {
         });
       }
     );
-
-    clearTimeout(timeoutId);
 
     if (response.ok) {
       let outputDirectory = config.get("outputDirectory") || "<current>";
@@ -146,6 +148,7 @@ async function convertHTMLtoFormat(conversionType) {
       vscode.window.showErrorMessage(`Converter: ${err.message}`);
     }
   } finally {
+    clearTimeout(timeoutId);
     conversionInProgress = false;
   }
 }
